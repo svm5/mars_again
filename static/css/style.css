@@ -1,0 +1,30 @@
+h1{
+    color: red
+}
+
+.base_container{
+    width:50%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+form.login_form {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 450px;
+    background-color: #a3c3ff;
+    border: 1px solid gray;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+label{
+    margin-top: 5px
+}
+
+.carousel-inner > .carousel-item > img {
+    width:640px;
+    height:360px;
+  }
