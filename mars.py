@@ -1,8 +1,20 @@
 
-from flask import Flask, url_for, request
+from flask import Flask, url_for, request, render_template
 
 
 app = Flask(__name__)
+
+
+d = {
+    "title": "Анкета",
+    "surname": "",
+    "name": "",
+    "education": "",
+    "profession": "",
+    "sex": "",
+    "motivation": "",
+    "ready": ""
+}
 
 
 @app.route('/')
@@ -10,9 +22,32 @@ def start():
     return """<b><h1>Миссия Колонизация Марса</h1></b>"""
 
 
-@app.route("/index")
-def index():
-    return """<b><h1>И на Марсе будут яблони цвести!</h1></b>"""
+@app.route("/<title>")
+@app.route("/index/<title>")
+def index(title):
+    return render_template("base.html", title=title)
+
+
+@app.route("/training/<prof>")
+def proff(prof):
+    return render_template("training.html", prof=prof.lower())
+
+
+@app.route("/list_prof/<list_type>")
+def list_proff(list_type):
+    if list_type.lower() not in ("ol", "ul"):
+        return "Некорректный параметр (Введите ol или ul)"
+    arr = ["Программист", "Доктор", "Инженер", "Пилот", "Эколог"]
+    return render_template("list_prof.html", prof_list=arr, list_type=list_type)
+
+
+# данные, введённые в анкете(/astronaut_selection) сохраняются в словарь d
+# в шаблон передаётся этот словарь
+@app.route("/answer")
+@app.route("/auto_answer")
+def answer():
+    print(d)
+    return render_template("auto_answer.html", title=d["title"], d=d)
 
 
 @app.route('/choice/<planet_name>')
@@ -287,16 +322,25 @@ def form():
         """
     elif request.method == "POST":
         print(request.form["surname"])
+        d["surname"] = request.form["surname"]
         print(request.form["name"])
+        d["name"] = request.form["name"]
         print(request.form["email"])
         print(request.form["education"])
+        d["education"] = request.form["education"]
         arr = request.form.getlist("prof")
         print(*arr)
+        d["profession"] = " ".join(arr)
         print(request.form["sex"])
+        d["sex"] = request.form["sex"]
         print(request.form["motivation"])
+        d["motivation"] = request.form["motivation"]
         print(request.form["photo"])
         if "stay" in request.form:
+            d["ready"] = "True"
             print(request.form["stay"])
+        else:
+            d["ready"] = "False"
         # for el in request.form:
         #     print(el.split())
         return "Форма отправлена"
