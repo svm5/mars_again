@@ -1,8 +1,12 @@
 
-from flask import Flask, url_for, request, render_template
+from flask import Flask, url_for, request, render_template, redirect
+from flask_wtf import FlaskForm
+from wtforms import IntegerField, StringField, PasswordField, BooleanField, SubmitField
+from wtforms.validators import DataRequired
 
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'yandexlyceum_secret_key'
 
 
 d = {
@@ -15,6 +19,27 @@ d = {
     "motivation": "",
     "ready": ""
 }
+
+
+class LoginForm(FlaskForm):
+    astronaut_id = IntegerField("Id астронавта", validators=[DataRequired()])
+    astronaut_password = PasswordField('Пароль астронавта', validators=[DataRequired()])
+    capitan_id = IntegerField("Id капитана", validators=[DataRequired()])
+    capitan_password = PasswordField('Пароль капитана', validators=[DataRequired()])
+    submit = SubmitField('Доступ')
+
+
+@app.route("/success")
+def success():
+    return "Всё ок"
+
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        return redirect('/success')
+    return render_template('login.html', title='Авторизация', form=form)
 
 
 @app.route('/')

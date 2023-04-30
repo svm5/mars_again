@@ -33,3 +33,11 @@ label{
     width:640px;
     height:360px;
   }
+
+.logo_container{
+    display: flex;
+}
+
+.image{
+    margin-right: 20px;
+}
